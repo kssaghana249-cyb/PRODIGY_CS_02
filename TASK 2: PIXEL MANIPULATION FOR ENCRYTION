@@ -1,0 +1,31 @@
+import cv2
+import numpy as np
+
+def encrypt_image(image_path, key):
+    # Read image
+    img = cv2.imread(image_path)
+
+    # Convert key to numpy array
+    key_array = np.full(img.shape, key, dtype=np.uint8)
+
+    # XOR encryption
+    encrypted = cv2.bitwise_xor(img, key_array)
+
+    return encrypted
+
+def decrypt_image(encrypted_img, key):
+    # XOR again with same key to decrypt
+    key_array = np.full(encrypted_img.shape, key, dtype=np.uint8)
+    decrypted = cv2.bitwise_xor(encrypted_img, key_array)
+
+    return decrypted
+
+# Example usage
+key = 123  # Must be between 0–255
+
+encrypted_img = encrypt_image("input.jpg", key)
+cv2.imwrite("encrypted.png", encrypted_img)
+
+# Decrypt
+decrypted_img = decrypt_image(encrypted_img, key)
+cv2.imwrite("decrypted.png", decrypted_img)
